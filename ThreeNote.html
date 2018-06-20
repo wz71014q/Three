@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>ThreeNote</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+/* GitHub stylesheet for MarkdownPad (http://markdownpad.com) */
+/* Author: Nicolas Hery - http://nicolashery.com */
+/* Version: b13fe65ca28d2e568c6ed5d7f06581183df8f2ff */
+/* Source: https://github.com/nicolahery/markdownpad-github */
+
+/* RESET
+=============================================================================*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+html{
+  height: 100%;
+  width: 100%;
+}
+/* BODY
+=============================================================================*/
+
+body {
+  font-family: Helvetica, arial, freesans, clean, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+  /* padding: 20px; */
+  /* max-width: 960px; */
+  /* margin: 0 auto; */
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+body>*:first-child {
+  margin-top: 0 !important;
+}
+
+body>*:last-child {
+  margin-bottom: 0 !important;
+}
+#tree{
+  position: fixed;
+  float: left;
+  width: 20%;
+  height: 100%;
+  padding-top: 36px;
+  padding-left: 10px;
+  line-height: 2;
+}
+#main{
+  width: 80%;
+  float: right;
+  padding-left: 10px;
+}
+/* BLOCKS
+=============================================================================*/
+
+p, blockquote, ul, ol, dl, table, pre {
+  margin: 15px 0;
+}
+
+/* HEADERS
+=============================================================================*/
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+  font-size: inherit;
+}
+
+h1 {
+  font-size: 28px;
+  color: #000;
+  padding-top: 30px;
+}
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #ccc;
+  color: #000;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+h4 {
+  font-size: 16px;
+}
+
+h5 {
+  font-size: 14px;
+}
+
+h6 {
+  color: #777;
+  font-size: 14px;
+}
+
+body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+  margin-top: 10px;
+}
+
+/* LINKS
+=============================================================================*/
+
+a {
+  color: #4183C4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* LISTS
+=============================================================================*/
+
+ul, ol {
+  padding-left: 30px;
+}
+
+ul li > :first-child, 
+ol li > :first-child, 
+ul li ul:first-of-type, 
+ol li ol:first-of-type, 
+ul li ol:first-of-type, 
+ol li ul:first-of-type {
+  margin-top: 0px;
+}
+
+ul ul, ul ol, ol ol, ol ul {
+  margin-bottom: 0;
+}
+
+dl {
+  padding: 0;
+}
+
+dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
+
+dl dt:first-child {
+  padding: 0;
+}
+
+dl dt>:first-child {
+  margin-top: 0px;
+}
+
+dl dt>:last-child {
+  margin-bottom: 0px;
+}
+
+dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
+
+dl dd>:first-child {
+  margin-top: 0px;
+}
+
+dl dd>:last-child {
+  margin-bottom: 0px;
+}
+
+/* CODE
+=============================================================================*/
+
+pre, code, tt {
+  font-size: 12px;
+  font-family: Consolas, "Liberation Mono", Courier, monospace;
+}
+
+code, tt {
+  margin: 0 0px;
+  padding: 0px 0px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px;
+}
+
+pre>code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent;
+}
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+pre code, pre tt {
+  background-color: transparent;
+  border: none;
+}
+
+kbd {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #DDDDDD;
+    background-image: linear-gradient(#F1F1F1, #DDDDDD);
+    background-repeat: repeat-x;
+    border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+    border-image: none;
+    border-radius: 2px 2px 2px 2px;
+    border-style: solid;
+    border-width: 1px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    line-height: 10px;
+    padding: 1px 4px;
+}
+
+/* QUOTES
+=============================================================================*/
+
+blockquote {
+  border-left: 4px solid #DDD;
+  padding: 0 15px;
+  color: #777;
+}
+
+blockquote>:first-child {
+  margin-top: 0px;
+}
+
+blockquote>:last-child {
+  margin-bottom: 0px;
+}
+
+/* HORIZONTAL RULES
+=============================================================================*/
+
+hr {
+  clear: both;
+  margin: 15px 0;
+  height: 0px;
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  border-bottom: 4px solid #ddd;
+  padding: 0;
+}
+
+/* TABLES
+=============================================================================*/
+
+table th {
+  font-weight: bold;
+}
+
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 6px 13px;
+}
+
+table tr {
+  border-top: 1px solid #ccc;
+  background-color: #fff;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+/* IMAGES
+=============================================================================*/
+
+img {
+  max-width: 100%
+}
+</style>
+</head>
+<body>
+<div id="tree">
+<ul>
+<li><a href="#offWebsite">一、官方网站:https://threejs.org</a></li>
+<li><a href="#about">二、关于Three.js</a></li>
+<li><a href="#begin">三、开始</a></li>
+<li>
+<a href="#instance">四、实例</a>
+<ul>
+<li><a href="#stuctrue">基本结构</a></li>
+<li><a href="#out">结果</a></li>
+</ul>
+</li>
+<li>
+<a href="#concept">五、概念</a>
+<ul>
+<li><a href="#coordinate">坐标系</a></li>
+<li><a href="#scene">场景</a></li>
+<li><a href="#camera">相机</a></li>
+<li><a href="#light">灯光</a></li>
+<li><a href="#model">3D模型</a></li>
+</ul>
+</li>
+<li><a href="#animation">六、简单动画</a></li>
+<li><a href="#controls">七、交互控制</a></li>
+<li><a href="#end">结束</a></li>
+</ul>
+</div>
+<div id="main">
+<h1><strong>Three入门学习笔记整理</strong></h1>
+<hr />
+<h1 id="offWebsite"><a href="https://threejs.org" title="https://threejs.org">一、官方网站:https://threejs.org</a></h1>
+<h1 id="about">二、关于Three.js</h1>
+<blockquote>
+<p>WebGL是大部分浏览器直接支持的一种3D绘图标准，它可以创建二维图形和应用，还可以充分利用GPU，创建漂亮的、高性能的三维应用。直接使用WebGL非常复杂，Three.js库提供了一套基于WebGL的、非常易用的JavaScrip API，它源自github的一个<strong><a href="https://github.com/mrdoob/three.js" title="https://github.com/mrdoob/three.js">开源项目</a></strong>，通过这些API可以直接在浏览器中创建三维场景。本文整理了一些入门资料。</p>
+</blockquote>
+<h1 id="begin">三、开始</h1>
+<ul>
+<li>
+<p>引入<br />
+可以直接在HTML引入<a href="https://raw.githubusercontent.com/mrdoob/three.js/dev/build/three.js" title="https://raw.githubusercontent.com/mrdoob/three.js/dev/build/three.js">Three.js</a>：<br />
+<code>&lt;script src=&quot;three.js&quot;&gt;&lt;/script&gt;</code><br />
+也可以用npm安装：<br />
+<code>npm i three</code><br />
+<code>import * as THREE from 'three'</code>  
+</p>
+</li>
+<li>
+<p>使用<br />
+three渲染一个3D场景需要以下<strong>必要元素</strong>:<br />
+1.场景(Scene)：是物体、光源等元素的容器，要渲染的东西需要先添加进场景；<br />
+2.相机（Camera）：控制视角的位置、范围以及视觉焦点的位置,一个3D环境中只能存在一个相机；<br />
+3.光源（Light）：包括全局光、平行光、点光源； 
+4.物体对象（Mesh）：包括二维物体（点、线、面）、三维物体、粒子等； <br />
+5.渲染器（Renderer）：指定渲染方式，如webGL\canvas2D\Css2D\Css3D等；<br />
+<strong>非必要元素</strong>：<br />
+控制器(Control)：相机控件，可通过键盘、鼠标控制相机的移动。</p>
+</li>
+</ul>
+<h1 id="instance">四、实例</h1>
+<h2 id="stuctrue">基本结构</h2>
+<pre><code>const width = window.innerWidth;  
+const height = window.innerHeight;   
+var renderer;  
+var camera;  
+var light;  
+var scene;   
+
+function initRender() {
+  // 初始化渲染器
+  renderer = new THREE.WebGLRenderer({
+    antialias: true// 抗锯齿
+  });
+  renderer.setSize(width, height);  // 设置大小
+  renderer.setClearColor(0xffffff, 1.0);  // 设置背景色
+  document.body.appendChild(renderer.domElement);  
+}
+
+function initScene() {  
+  // 初始化场景
+  scene = new THREE.Scene();  
+}
+
+function initCamera() {  
+  // 初始化相机
+  camera = new THREE.PerspectiveCamera(45, width / height, 10, 10000);  // 添加透视相机
+  camera.position.set(500, 500, 500); // 设置相机位置  
+  camera.up.set(0, 1, 0);  // 相机以哪个轴为上方
+  camera.lookAt(0, 0, 0);  // 相机焦点设置
+}
+
+function initLight() {  
+  // 初始化灯光
+  light = new THREE.DirectionalLight({ color: 0xffffff });  // 添加平行光
+  light.position.set(1, 0, 0); // 光的方向(x,y,z) 
+  scene.add(light);  
+  let pointLight = new THREE.PointLight(0xffffff);  // 添加点光源  
+  pointLight.position.set(100, 100, 100);  // 点光源的位置
+  scene.add(pointLight);  
+  let pointHelper = new THREE.PointLightHelper(pointLight, 5, 0xff0000);  // 设置点光源辅助工具,可以看到点光源的位置  
+  scene.add(pointHelper);
+}
+
+function initObject() {  
+  // 初始化物体
+  let geometry = new THREE.CylinderGeometry(100, 100, 300, 100, 100); // 添加一个圆柱体
+  let material = new THREE.MeshLambertMaterial({
+    color: 0xffff00
+  }); // 添加材料
+  // material.wireframe=true; // 圆柱体是否以网格显示
+  mesh = new THREE.Mesh(geometry, material);
+  mesh.position.set(0, 0, 0);
+  scene.add(mesh);
+}
+
+function initAxes() {
+// 添加辅助坐标轴
+  let axes = new THREE.AxesHelper(1000);// 蓝色为Z轴，绿色为Y轴，红色为X轴
+  scene.add(axes);
+}
+
+function threeStart() {  
+  initRender();  
+  initScene();  
+  initCamera();  
+  initLight();  
+  initAxes();  
+  initObject();  
+  renderer.clear();
+  renderer.render(scene, camera);
+}
+
+window.onload = function () {  
+  threeStart();  
+};  
+</code></pre>
+
+<h2 id="out">结果</h2>
+<p><img src="https://i.imgur.com/GFKovos.png" />  
+</p>
+<h1 id="concept">五、概念</h1>
+<h2 id="coordinate">坐标系</h2>
+<p>three.js中采用的是右手坐标系，坐标轴方向主要是<code>camera.up.set(x, y, z);</code>设置。也就是说在相机眼里（其实就是我们看的角度）哪个轴向上。理解坐标系很重要，详情请看<a href="https://www.cnblogs.com/heyach/p/6902948.html" title="http://www.cnblogs.com/heyach/p/6902948.html">three右手坐标系讲解</a>。</p>
+<h2 id="scene"><a href="https://threejs.org/docs/index.html#api/scenes/Scene" title="https://threejs.org/docs/index.html#api/scenes/Scene">场景</a></h2>
+<p>物体、光源、控制器的添加必须使用secen.add(object)添加到场景中才能渲染出来。  
+</p>
+<pre><code>var scene;
+function initScene(){
+  scene=new THREE.Scene();
+}
+</code></pre>
+
+<h2 id="camera"><a href="https://threejs.org/docs/index.html#api/cameras/Camera" title="https://threejs.org/docs/index.html#api/cameras/Camera">相机</a></h2>
+<p><a href="https://threejs.org/docs/index.html#api/cameras/OrthographicCamera" title="https://threejs.org/docs/index.html#api/cameras/OrthographicCamera">正交投影相机</a>：<br />
+<code>THREE.OrthographicCamera(left, right, top, bottom, near, far) // 大小不因远近而变化</code><br />
+<a href="https://threejs.org/docs/index.html#api/cameras/PerspectiveCamera" title="https://threejs.org/docs/index.html#api/cameras/PerspectiveCamera">透视投影相机</a>：<br />
+<code>THREE.PerspectiveCamera(fov, aspect, near, far) // 遵循近大远小的空间规则</code></p>
+<p>一般情况下，我们使用的是透视投影相机，其参数为：</p>
+<pre><code>fov：垂直方向夹角(视角)
+aspect：可视区域长宽比 width/height
+near：渲染区域离摄像机最近的距离
+far：渲染区域离摄像机最远的距离，仅在距离摄像机near和far间的区域会被渲染到canvas中
+</code></pre>
+
+<p>相机的位置设置：<br />
+<code>camera.position.set(x,y,z)或camera.position = new THREE.Vector3(x, y, z);</code><br />
+控制相机的焦点位置，决定相机的朝向<br />
+<code>camera.lookAt(0, 0, 0);</code><br />
+添加<a href="https://threejs.org/docs/index.html#api/helpers/CameraHelper" title="https://threejs.org/docs/index.html#api/helpers/CameraHelper">相机辅助工具</a>来查看相机的位置</p>
+<h2 id="light"><a href="https://threejs.org/docs/index.html#api/lights/Light" title="https://threejs.org/docs/index.html#api/lights/Light">灯光</a></h2>
+<p><a href="https://threejs.org/docs/index.html#api/lights/AmbientLight" title="https://threejs.org/docs/index.html#api/lights/AmbientLight">全局光</a>：THREE.AmbientLight，影响整个scene的光源，一般是为了弱化阴影或调整整体色调，可设置光照颜色，以颜色的明度确定光源亮度；<br />
+<a href="https://threejs.org/docs/index.html#api/lights/DirectionalLight" title="https://threejs.org/docs/index.html#api/lights/DirectionalLight">平行光</a>：THREE.DirectionalLight，模拟类似太阳的光源，所有被照射的区域亮度是一致的，可设置光照颜色、光照方向（通过向量确定方向），以颜色的明度确定光源亮度；<br />
+<a href="https://threejs.org/docs/index.html#api/lights/PointLight" title="https://threejs.org/docs/index.html#api/lights/PointLight">点光源</a>：THREE.PointLight，单点发光，照射所有方向，可设置光照强度，光照半径和光颜色；<br />
+<a href="https://threejs.org/docs/index.html#api/lights/shadows/SpotLightShadow" title="https://threejs.org/docs/index.html#api/lights/shadows/SpotLightShadow">聚光灯</a>：THREE.SpotLight，这种光源有聚光的效果，类似于台灯，吊灯，手电筒。<br />
+最简单的用法：  
+</p>
+<pre><code>function initLight() {  
+  light = new THREE.DirectionalLight({ color: 0xffffff }); // 创建白色平行光  
+  light.position.set(1, 0, 0); // 平行光只需设置方向向量，其他光源需要设置具体位置
+  scene.add(light);  
+}
+</code></pre>
+
+<p>光影关系可以显著影响显示效果。参考资料：<a href="https://www.cnblogs.com/amy2011/p/5761174.html" title="https://www.cnblogs.com/amy2011/p/5761174.html">https://www.cnblogs.com/amy2011/p/5761174.html</a></p>
+<h2 id="model">3D模型</h2>
+<p>我们可以用three自由地创建一些<a href="https://threejs.org/docs/index.html#api/objects/Points" title="https://threejs.org/docs/index.html#api/objects/Points">点</a>、<a href="https://threejs.org/docs/index.html#api/objects/Line" title="https://threejs.org/docs/index.html#api/objects/Line">线</a>、<a href="https://threejs.org/docs/index.html#api/math/Plane" title="https://threejs.org/docs/index.html#api/math/Plane">面</a>和<a href="https://threejs.org/docs/index.html#api/core/Geometry" title="https://threejs.org/docs/index.html#api/core/Geometry">几何体</a>。或者加载一些已经做好的3D模型，three更新的很快，目前支持大部分格式的3D模型，以后会越来越多。 </p>
+<pre><code>function initObject() {
+  // 添加一个圆柱体
+  let geometry = new THREE.CylinderGeometry(100, 100, 300, 100, 100);
+  let material = new THREE.MeshLambertMaterial({ color: 0xffff00 });
+  mesh = new THREE.Mesh(geometry, material);
+  mesh.position = new THREE.Vector3(0, 0, 0);
+  scene.add(mesh);
+}
+</code></pre>
+
+<p><a href="https://threejs.org/docs/index.html#api/geometries/CylinderGeometry" title="https://threejs.org/docs/index.html#api/geometries/CylinderGeometry">CylinderGeometry</a>是柱体，控制底面边的数量可以得到近似的圆柱体，还可以创建<a href="https://threejs.org/docs/index.html#api/geometries/BoxGeometry" title="https://threejs.org/docs/index.html#api/geometries/BoxGeometry">正方体</a>、<a href="https://threejs.org/docs/index.html#api/geometries/OctahedronGeometry" title="https://threejs.org/docs/index.html#api/geometries/OctahedronGeometry">球</a>、<a href="https://threejs.org/docs/index.html#api/geometries/RingGeometry" title="https://threejs.org/docs/index.html#api/geometries/RingGeometry">环</a>、<a href="https://threejs.org/docs/index.html#api/geometries/TextGeometry" title="https://threejs.org/docs/index.html#api/geometries/TextGeometry">文字</a>等已经设定好的几何体。如果库里没有需要的，可以自己创建自定义几何体。</p>
+<hr />
+<pre><code>function initCar() {  
+  // 加载一个外部.obj汽车模型
+  let mtlLoader = new THREE.MTLLoader();  
+  mtlLoader.load('../../../3Dmodel/Lamborghini/Avent.mtl', (materials) =&gt; {  
+    // 加载材料
+    materials.preload();  
+    let objLoader = new THREE.OBJLoader();  
+    objLoader.setMaterials(materials);  
+    objLoader.load('../../../3Dmodel/Lamborghini/Avent.obj', (object) =&gt; {// 加载模型  
+        object.scale.set(80, 80, 80); // 放大倍数  
+        scene.add(object);  
+      }, (suc) =&gt; { console.log(((suc.loaded / suc.total) * 100) + '% OBJloaded'); }, (err) =&gt; { console.log(err); }  
+    );  
+  }, (suc) =&gt; { console.log(((suc.loaded / suc.total) * 100) + '% MTLloaded'); }, (err) =&gt; { console.log(err); });  
+}
+</code></pre>
+
+<p><img src="https://i.imgur.com/LAWWs58.png" alt="picture" /><br />
+three.js加载外部文件需要用<a href="https://github.com/mrdoob/three.js/tree/dev/examples/js/loaders" title="https://github.com/mrdoob/three.js/tree/dev/examples/js/loaders">“loader系列”方法</a>，通过这些方法可以加载.obj、.json、.dae等格式的模型(<a href="https://www.zhihu.com/question/50005990" title="https://www.zhihu.com/question/50005990">点击查看不同格式的模型之间的差异及优劣</a>）。
+<img src="https://i.imgur.com/VokCPRx.png" alt="picture" /><br />
+像这种将一张图片当作一个平面的，要用<a href="https://threejs.org/docs/index.html#api/textures/Texture" title="https://threejs.org/docs/index.html#api/textures/Texture">Texture</a>加载<a href="https://threejs.org/docs/index.html#api/constants/Materials" title="https://threejs.org/docs/index.html#api/constants/Materials">材质（纹理）</a>。<a href="https://www.cnblogs.com/amy2011/p/6148736.html" title="https://www.cnblogs.com/amy2011/p/6148736.html">参考资料</a></p>
+<h1 id="animation">六、简单动画</h1>
+<ul>
+<li>
+<p>动画<br />
+动画有两种方式，一种是让图像动，另一种是让相机动。<br />
+一个简单的<a href="https://www.cnblogs.com/silent-stranger/p/6027266.html" title="https://www.cnblogs.com/silent-stranger/p/6027266.html">旋转</a>：  
+</p>
+<pre><code>function animate() {
+  var v1 = new THREE.Vector3( 1, 1, 1 );
+  meshAll.rotateOnAxis(v1,0.01);
+  mesh.rotation.z -= 0.01;
+  requestAnimationFrame(animate);
+  renderer.render(scene,camera);
+  stats.update();
+}
+</code></pre>
+
+</li>
+<li>
+<p>性能检测<br />
+为了监控帧率，引用<a href="https://github.com/mrdoob/stats.js/" title="https://github.com/mrdoob/stats.js/">Stats</a>插件来监控动画的帧率<br />
+<img src="https://i.imgur.com/vVFkb9X.png" alt="picture" />  
+</p>
+<pre><code>&lt;script src=&quot;Stats.js&quot;&gt;&lt;/script&gt;
+……
+function initStats() {  
+  stats = new Stats();  
+  stats.domElement.style.position = 'absolute';  
+  stats.domElement.style.top = '0px';  
+  stats.domElement.style.left = '0px';  
+  document.body.appendChild(stats.domElement);  
+}
+</code></pre>
+
+</li>
+</ul>
+<h1 id="controls">七、交互控制</h1>
+<ul>
+<li><a href="https://workshop.chromeexperiments.com/examples/gui/#1--Basic-Usage" title="https://workshop.chromeexperiments.com/examples/gui/#1--Basic-Usage">dat.gui</a><br />
+<img src="https://i.imgur.com/ak98EV0.png" alt="GUI" /><br />
+资料：<a href="https://www.cnblogs.com/xiaoniuzai/p/6685556.html" title="https://www.cnblogs.com/xiaoniuzai/p/6685556.html">https://www.cnblogs.com/xiaoniuzai/p/6685556.html</a></li>
+<li>
+<p><a href="https://github.com/mrdoob/three.js/tree/dev/examples/js/controls" title="https://github.com/mrdoob/three.js/tree/dev/examples/js/controls">其它插件</a><br />
+three自己也提供了很多插件来控制，例如<a href="https://threejs.org/docs/index.html#examples/controls/OrbitControls" title="https://threejs.org/docs/index.html#examples/controls/OrbitControls">OrbitControls</a>，详情请看官网！<br />
+<img src="https://i.imgur.com/FsY3Q2T.gif" />  
+</p>
+<pre><code>function initControl() {
+  controls = new THREE.OrbitControls(camera);
+  // controls.enabled = false;// boolean,禁用控制器
+  // controls.enableKeys = false; // boolean,禁用键盘
+  // controls.autoRotate = true; // boolean,是否自动旋转,所有的旋转都是绕着场景中心旋转，不是原点
+  // controls.autoRotateSpeed = 2; // Number,自动旋转速度
+  controls.enableDamping = true; // boolean, 开启后有缓冲效果，具有物理的阻力感
+  controls.dampingFactor = 0.3; // Float, 阻尼系数(0~1)，数值越低，阻力越小
+  // controls.enablePan = false; // boolean,禁止平移
+  // controls..panSpeed = 0.5; // 平移速度
+  // controls.enableRotate = false; // boolean,禁止旋转
+  // controls.enableZoom = false; // boolean,禁止远近拉伸
+  // controls.zoomSpeed = 0.1;// 鼠标滚动一个单位时拉伸幅度
+  // controls.rotateSpeed = 0.5;// 旋转速度
+  // controls.keyPanSpeed = 0.5; // Float, 用键盘平移的速度
+  // controls.keys = {
+  //   LEFT: 65,
+  //   RIGHT: 68,
+  //   UP: 87,
+  //   BOTTOM: 83
+  // }; // 键盘编码
+  // controls.minAzimuthAngle = 0 * Math.PI; // 水平方向最小角度
+  // controls.maxAzimuthAngle = 0.5 * Math.PI; // 水平方向最大角度，当Z轴向上时，从Z轴正方向往下看，逆时针90度
+  // controls.minDistance = 500; // 相机离物体最近距离
+  // controls.maxDistance = 600; // 相机离物体最远距离
+  // controls.minPolarAngle = 0 * Math.PI;// 上下两极的可视区域最小角度
+  // controls.maxPolarAngle = 0.5 * Math.PI;// 上下两极的可视区域最大角度，Z轴向上，从屏幕正上方往下90度
+  // controls.mouseButtons = {
+  //   ORBIT: THREE.MOUSE.LEFT,
+  //   ZOOM: THREE.MOUSE.MIDDLE,
+  //   PAN: THREE.MOUSE.RIGHT
+  // }; // 鼠标键位设置
+  // controls.screenSpacePanning = false; // boolean,false时只能在不是向上轴的方向移动。比如相机Z轴向上，那么物体只能在XY平面内移动
+  // controls.target = new THREE.Vector3(300, 200, 0); // 相机聚焦坐标
+}  
+</code></pre>
+
+</li>
+</ul>
+<h1 id="end">结束</h1>
+<p>一个练习demo：<a href="https://www.jianshu.com/p/92771817c73f" title="https://www.jianshu.com/p/92771817c73f">一个采用 Three.js 的 3D 动画场景制作：飞行者</a><br />
+这些只是入门资料整理，如果想做出官网展示的那些demo，还要自己下功夫钻研！让我们一起快乐地学习吧！</p>
+</div>
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->
