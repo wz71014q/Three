@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>DisplayHall</title>
+    <style>
+        * { margin: 0; padding: 0; }
+        html { height: 100%; }
+        body { overflow: hidden; margin: 0; height: 100%; }
+        canvas { height: 100%; width: 100%; }
+        body {
+            background: linear-gradient(180deg, #373773, #235689, #2a9096, #364a7b, #4a367b, #5e3665, #2c294b, #31437a);
+            background-size: 1600% 1600%;
+            animation: skygradient 180s ease infinite;
+        }
+        @keyframes skygradient {
+            0% { background-position: 50% 0% }
+            50% { background-position: 50% 100% }
+            100% { background-position: 50% 0% }
+        }
+    </style>
+</head>
+<body>
+    
+    <script src="./js/three.js"></script>
+    <script src="./js/stats.min.js"></script>
+    <script src="./js/Detector.js"></script>
+    <script src="./js/OrbitControls.js"></script>
+    <script src="./js/dat.gui.min.js"></script>
+    <script src="./js/Tween.min.js"></script>
+    
+    <script src="../js/curves/NURBSCurve.js"></script>
+    <script src="../js/curves/NURBSUtils.js"></script>
+    <script src="../js/FBXLoader.js"></script>
+    <script src="../js/inflate.min.js"></script>
+    <script>
+
+        var renderer;
+        function initRenderer() {
+            renderer = new THREE.WebGLRenderer({ alpha: true, antalias: true }); // 透明，抗锯齿
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.shadowMapEnabled = true; // 启动阴影选项
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+        }
+        
+        var stats;
+        function initStats() {
+            stats = new Stats();
+            stats.showPanel(0);
+            document.body.appendChild(stats.dom);
+        }
+
+        var scene;
+        function initScene() {
+            scene = new THREE.Scene();
+        }
+
+        var camera;
+        function initCamera() {
+            var fov, aspect, near, far;
+            fov = 75;
+            aspect = window.innerWidth / window.innerHeight;
+            near = 0.1;
+            far = 3000;
+            camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+            camera.position.set(5, 5, 5);
+            // camera.up = new THREE.Vector3(0, 1, 0); // 向上方向
+            camera.lookAt(new THREE.Vector3(0, 0, 0));
+        }
+
+        var globalCamera;
+        function initGlobalCamera() {
+            var fov, aspect, near, far;
+            fov = 75;
+            aspect = window.innerWidth / window.innerHeight;
+            near = 0.1;
+            far = 3000;
+            globalCamera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+            globalCamera.position.set(500, 500, 500);
+            // globalCamera.up = new THREE.Vector3(0, 1, 0); // 向上方向
+            globalCamera.lookAt(new THREE.Vector3(0, 0, 0));
+        }
+
+        var animateCamera;
+        function initAnimateCamera() {
+            var fov, aspect, near, far;
+            fov = 75;
+            aspect = window.innerWidth / window.innerHeight;
+            near = 0.1;
+            far = 3000;
+            animateCamera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+            // animateCamera.position.set(500, 500, 500);
+            // animateCamera.up = new THREE.Vector3(0, 1, 0); // 向上方向
+            // animateCamera.lookAt(new THREE.Vector3(0, 0, 0));
+        }
+
+        var controls;
+        function initControls() {
+            controls = new THREE.OrbitControls(camera);
+        }
+
+        var Options = function () {
+            this.isAnimateCamera = true;
+            this.toogleLookCube = function () {
+                if (this.currentObj) {
+                    this.currentObj = null;
+                } else {
+                    this.currentObj = scene.getObjectByName('球体');
+                }
+            }
+            this.toggleCubeVisible = function () {
+                var obj = scene.getObjectByName('球体');
+                obj.visible = !obj.visible;
+            };
+            this.currentObj = null;
+        }
+        var options = new Options();
+
+        var gui;
+        function initGui() {
+            gui = new dat.GUI();
+            gui.add(options, "isAnimateCamera");
+            gui.add(options, 'toggleCubeVisible');
+            gui.add(options, 'toogleLookCube');
+        }
+        
+        var hemisphereLight, ambientLight, directionalLight;
+        function initLight() {
+            hemisphereLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 1);
+            scene.add(hemisphereLight);
+            ambientLight = new THREE.AmbientLight(0x404040);
+            scene.add(ambientLight);
+
+            directionalLight = new THREE.DirectionalLight("#ffffff");
+            directionalLight.position.set(0, 0, 60);
+            directionalLight.shadow.camera.near = 20; //产生阴影的最近距离
+            directionalLight.shadow.camera.far = 200; //产生阴影的最远距离
+            directionalLight.shadow.camera.left = -50; //产生阴影距离位置的最左边位置
+            directionalLight.shadow.camera.right = 50; //最右边
+            directionalLight.shadow.camera.top = 50; //最上边
+            directionalLight.shadow.camera.bottom = -50; //最下面
+            //这两个值决定使用多少像素生成阴影 默认512
+            directionalLight.shadow.mapSize.height = 1024;
+            directionalLight.shadow.mapSize.width = 1024;
+            //告诉平行光需要开启阴影投射
+            directionalLight.castShadow = true;
+            // scene.add(directionalLight);
+        }
+
+        var mixers = [];
+        function initObject() {
+            var loader = new THREE.FBXLoader();
+            loader.load('../fbx/simpleCameraTest3.fbx', function (obj) {
+                scene.add(obj);
+
+                var mixer = new THREE.AnimationMixer(obj);
+                obj.mixer = mixer;
+                mixers.push(mixer);
+
+                obj.children.forEach(function (objMesh) {
+                    // console.log(objMesh);
+                    if (objMesh.isMesh) {
+                        objMesh.castShadow = true; // 启动阴影选项
+                    }
+                    if (objMesh.type == 'PerspectiveCamera') {
+
+                        console.log(objMesh.children[0]);
+                        var cameraTarget = objMesh.children[0];
+                        cameraTarget && scene.add(cameraTarget);
+
+                        objMesh.fov = 75;
+                        objMesh.aspect = window.innerWidth / window.innerHeight;
+                        objMesh.near = 0.1;
+                        objMesh.far = 1000;
+                        // objMesh.position.set(0, 0, 0);
+                        // objMesh.rotation.set(0, 0, 0);
+                        // objMesh.up = new THREE.Vector3(0, 1, 0); // 向上方向
+                        // objMesh.lookAt(new THREE.Vector3(0, 0, 0));
+
+                        // scene.add(objMesh);
+                        if (objMesh.name !== '摄像机') {
+                            animateCamera = objMesh;
+                            var helper = new THREE.CameraHelper(objMesh);
+                            scene.add(helper);
+                        }
+                    }
+                    if (objMesh.type == 'SpotLight') {
+                        var helper = new THREE.SpotLightHelper(objMesh);
+                        scene.add(helper);
+                    }
+                });
+                
+                var clips = obj.animations;
+                
+                // Play a specific animation
+                // var clip = THREE.AnimationClip.findByName(clips, 'CINEMA_4D___');
+                // var action = mixer.clipAction(clip);
+                // action.play();
+                
+                // Play all animations
+                clips.forEach(function (clip) {
+                    var action = mixer.clipAction(clip);
+                    action.play();
+                    action.clampWhenFinished = false;
+                    action.setEffectiveTimeScale(0.2);
+                });
+            });
+            var geometry = new THREE.PlaneGeometry(100,50,32,32);
+            var material = new THREE.MeshPhongMaterial({color: 0xeeeeee,side: THREE.DoubleSize});
+            var mesh = new THREE.Mesh(geometry,material);
+            mesh.receiveShadow = true; // 启用接受阴影选项
+            mesh.rotation.x = -Math.PI / 2;
+            // scene.add(mesh);
+        }
+
+        var raycaster = new THREE.Raycaster();
+        var mouse = new THREE.Vector2();
+        function onMouseMove(event) {
+            // calculate mouse position in normalized device coordinates
+            // (-1 to +1) for both components
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+        }
+        window.addEventListener('mousemove', function (event) {
+            event.preventDefault();
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        }, false);
+
+        /**
+         * 根据光投射器判断鼠标所在向量方向是否穿过物体，穿过则改变物体材质
+         * @param {*} raycaster 光投射器
+         * @param {*} scene     场景
+         * @param {*} camera    相机
+         * @param {*} mouse     鼠标位置对应的二维向量
+         */
+        var intersects;
+        function renderRaycaster() {
+            raycaster.setFromCamera(mouse, camera);
+            intersects = raycaster.intersectObjects(scene.children);
+            if (intersects.length > 0) {
+                console.log(intersects);
+                // camera.position.x = intersects[0].point.x;
+                // camera.position.z = intersects[0].point.z;
+
+                // var coords = { x: camera.position.x, z: camera.position.z };
+                // var tween = new TWEEN.Tween(coords)
+                //     .to({
+                //         x: intersects[0].point.x,
+                //         z: intersects[0].point.z,
+                //     }, 1000)
+                //     .onUpdate(function () {
+                //         camera.position.x = coords.x;
+                //         camera.position.z = coords.z;
+                //     })
+                //     .start();
+            }
+        }
+        // 渲染光投射器投射到的对象
+        window.addEventListener('mousedown', function(event) {
+            event.preventDefault();
+            renderRaycaster();
+        }, false);
+        
+        var offsetGlobalCamera = 4 / 5;
+        var widthRatio = 1 / 5;
+        var clock = new THREE.Clock();
+        var animate = function () {
+            requestAnimationFrame(animate);
+            TWEEN.update();
+            stats.update();
+            controls.update();
+            
+            mixers.forEach(function (mixer) {
+                mixer.update(clock.getDelta());
+            });
+
+            renderer.setViewport(0, 0, window.innerWidth, window.innerHeight);
+            renderer.setScissor(0, 0, window.innerWidth, window.innerHeight);
+            renderer.setScissorTest(true);
+            if (options.currentObj) {
+                animateCamera.lookAt(options.currentObj.position);
+            }
+            if (options.isAnimateCamera) {
+                renderer.render(scene, animateCamera);
+            } else {
+                renderer.render(scene, camera);
+            }
+
+            renderer.setViewport(window.innerWidth * offsetGlobalCamera, window.innerHeight * offsetGlobalCamera, window.innerWidth * widthRatio, window.innerHeight * widthRatio);
+            renderer.setScissor(window.innerWidth * offsetGlobalCamera, window.innerHeight * offsetGlobalCamera, window.innerWidth * widthRatio, window.innerHeight * widthRatio);
+            renderer.setScissorTest(true);
+            renderer.render(scene, globalCamera);
+
+        }
+
+        function start() {
+            initRenderer();
+            initScene();
+            initCamera();
+            initGlobalCamera();
+            initAnimateCamera();
+            initControls();
+            initStats();
+            initGui();
+            initLight();
+            initObject();
+            animate();
+            initAxesHelper();
+            initGridHelper();
+            initLightHelper();
+            // initCameraHelper();
+        }
+
+        if (Detector.webgl) {
+            start();
+        } else {
+            var warning = Detector.getWebGLErrorMessage();
+            document.getElementById('container').appendChild(warning);
+        }
+
+        var axesHelper;
+        function initAxesHelper() {
+            axesHelper = new THREE.AxesHelper(10);
+            scene.add(axesHelper);
+        }
+
+        var gridHelper;
+        function initGridHelper() {
+            gridHelper = new THREE.GridHelper(300, 10, 'black', 'gray');
+            gridHelper.position.y = 0;
+            gridHelper.position.x = 0;
+            scene.add(gridHelper);
+        }
+
+        var lightHelper;
+        function initLightHelper() {
+            var lightHelper = new THREE.DirectionalLightHelper(directionalLight, 50);
+            scene.add(lightHelper);
+        }
+
+        var cameraHelper;
+        function initCameraHelper() {
+            var helper = new THREE.CameraHelper(globalCamera);
+            scene.add(helper);
+        }
+        
+
+        window.addEventListener('resize', function () {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.render(scene, camera);
+
+            globalCamera.aspect = window.innerWidth / window.innerHeight;
+            globalCamera.updateProjectionMatrix();
+            renderer.render(scene, globalCamera);
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+    </script>
+</body>
+</html>
